@@ -1,0 +1,111 @@
+<html>
+	<head>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <script src="lib/d3.min.js"></script>
+		<script src="lib/vega.js"></script>
+
+    <script type="text/javascript">
+          function setupLine(dataTable, x, y, z, xtype, yType, zType) {
+
+              var xScale = {
+                                "name": "x",
+                                "type": xtype,
+                                "range": "width",
+                                "zero": false,
+                                "domain": {"data": dataTable[0].name, "field": x}
+                              };
+
+              var yScale = {
+                                "name": "y",
+                                "type": yType,
+                                "range": "height",
+                                "nice": true,
+                                "zero": false,
+                                "domain": {"data": dataTable[0].name, "field": y}
+                              };
+
+              var colorScale =  {
+                                "name": "color", 
+                                "type": zType, 
+                                "domain": {"data": dataTable[0].name, "field": z},
+                                "range": "category10"
+                              };
+
+              var scales =  [ xScale, yScale, colorScale];
+
+
+              var axes =  [
+                            {"type": "x", "scale": "x"},
+                            {"type": "y", "scale": "y"}
+                          ];
+
+              var marks =  [
+                            {
+                              "type": "group",
+                              "from": {
+                                "data": dataTable[0].name,
+                                "transform": [{"type": "facet", "groupby": [z]}]
+                              },
+                              "marks": [
+                                {
+                                  "type": "line",
+                                  "properties": {
+                                    "enter": {
+                                      "x": {"scale": "x", "field": x},
+                                      "y": {"scale": "y", "field": y},
+                                      "stroke": {"scale": "color", "field": z},
+                                      "strokeWidth": {"value": 2}
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+
+              var spec = {};
+              spec.width = 500;
+              spec.height = 200,
+              spec.axes = axes;
+              spec.data = dataTable;
+              spec.scales = scales;
+              spec.marks = marks;
+
+              return spec;      
+          };
+
+
+
+          function drawChart(spec, div) {
+            vg.parse.spec(spec, function(chart) { chart({el:div}).update(); });
+          }
+    </script>
+
+	</head>
+	
+	<body>
+        <div id="dChart"></div>
+
+        <script>
+
+         var data =  [
+            {
+              "name": "cars",
+              "values": [
+                {"horsepower": 1,  "torque": 10, "z": 1},  {"horsepower": 2,  "torque": 19, "z": 1}, {"horsepower": 1,  "torque": 15, "z": 2},
+                {"horsepower": 3,  "torque": 60, "z": 1}, {"horsepower": 7,  "torque": 25, "z": 2}
+              ]
+            }
+          ];
+
+          var x = "horsepower";
+          var y = "torque";
+          var z = "z"
+
+
+          drawChart(setupLine(data, x, y, z,"linear", "linear", "ordinal"), "#dChart");
+
+
+
+        </script>
+	</body>
+</html>
