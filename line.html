@@ -1,0 +1,81 @@
+<html>
+	<head>
+			<!-- Load c3.css -->
+			<link href="lib/c3.css" rel="stylesheet" type="text/css">
+
+			<!-- Load d3.js and c3.js -->
+			<script src="lib/d3.min.js" charset="utf-8"></script>
+			<script src="lib/c3.js"></script>
+	</head>
+	<body>
+		<div id="chart"></div>
+		<script type="text/javascript">
+
+		function getFormattedDate() {
+    var date = new Date();
+    var str = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " " +  date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+
+    return str;
+}
+
+			function drawChart(chart, i){
+				    chart.load({
+				        columns: [
+				        	timestamp,
+				            temperature, 
+				            humidity
+				        ]
+				    });
+			}
+
+			var timestamp = ["timestamp"];
+			var temperature = ["temperature"];
+			var humidity = ["humidity"];
+
+
+			var chart = c3.generate({
+				    data: {
+				    	 x: "timestamp",
+				    	 xFormat: '%Y-%m-%d %H:%M:%S',
+				        columns: [
+				        ]
+				    }
+				    ,
+					axis: {
+						    x: {
+						        type: 'timeseries',
+						        tick: {
+						            format: '%Y-%m-%d %H:%M:%S'
+						        }
+						    }
+						}
+				});
+
+			var count1 = 20;
+			var count = 1;
+			var isWindow = false;
+			var windowLength = 10;
+
+
+				(function myLoop (i) {          
+					   setTimeout(function () {   
+
+					   	if (isWindow && temperature.length > windowLength) {
+							timestamp.splice(1,1);
+					   		temperature.splice(1,1);
+					   		humidity.splice(1,1);
+					   	}
+
+					   		timestamp.push(getFormattedDate());
+					       temperature.push(count1 + (count));
+							humidity.push(count * 5);  
+							drawChart(chart, count);
+							count++;             
+					      if (--i) myLoop(i);      //  decrement i and call myLoop again if i > 0
+					   }, count * 500)
+					})(20);   
+
+		</script>
+
+	</body>
+</html>
