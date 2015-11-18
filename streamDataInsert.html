@@ -50,7 +50,7 @@
                                 {
                                   "type": "line",
                                   "properties": {
-                                    "enter": {
+                                    "update": {
                                       "x": {"scale": "x", "field": x},
                                       "y": {"scale": "y", "field": y},
                                       "stroke": {"scale": "color", "field": z},
@@ -101,25 +101,20 @@
             });
 
              setTimeout(function() {
+                      updateChart(view, [{"horsepower": 4,  "torque": 120, "z": 1}]);
 
-                       var data =  [
-                                      {
-                                        "name": "cars",
-                                        "values": [
-                                          {"horsepower": 1,  "torque": 100, "z": 1},  
-                                          {"horsepower": 2,  "torque": 19, "z": 1},
-                                          {"horsepower": 3,  "torque": 17, "z": 1}
-                                        ]
-                                      }
-                                    ];
-                      view.data("cars").insert([{"horsepower": 4,  "torque": 120, "z": 1}]);
-                      view.update();
+                      updateChart(view, [{"horsepower": 1,  "torque": 30, "z": 2}]);
+                      updateChart(view, [{"horsepower": 2,  "torque": 40, "z": 2}]);
+                      updateChart(view, [{"horsepower": 3,  "torque": 50, "z": 2}]);
+                      updateChart(view, [{"horsepower": 4,  "torque": 90, "z": 2}]);
                 },
                 1000
               );
+          }
 
-        
-
+          function updateChart(view, data) {
+              view.data("cars").insert(data);
+              view.update();
           }
     </script>
 
